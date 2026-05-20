@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1A1612">
+<title>Infection Drop · Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;700;800;900&family=Bricolage+Grotesque:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1A1612;
+    --bone: #F2EEE5;
+    --bone-dim: rgba(242,238,229,0.62);
+    --bone-faint: rgba(242,238,229,0.18);
+    --bone-hair: rgba(242,238,229,0.10);
+    --red: #E63946;
+    --display: 'Big Shoulders', 'Arial Black', sans-serif;
+    --body: 'Bricolage Grotesque', system-ui, sans-serif;
+    --mono: 'Geist Mono', 'SF Mono', Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    background: var(--ink);
+    color: var(--bone);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.45;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+  }
+
+  /* Layout */
+  .app { max-width: 480px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; }
+  .screen { flex: 1; display: flex; flex-direction: column; padding: 24px 20px 28px; }
+
+  /* Top status bar */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px 10px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--bone-dim);
+    border-bottom: 1px solid var(--bone-hair);
+  }
+  .topbar .brand { color: var(--bone); font-family: var(--display); font-weight: 800; letter-spacing: 0.02em; }
+  .topbar .brand .dot { display: inline-block; width: 7px; height: 7px; background: var(--red); border-radius: 50%; margin-left: 2px; vertical-align: 1px; }
+
+  /* Typography */
+  .display { font-family: var(--display); font-weight: 800; letter-spacing: -0.01em; line-height: 0.95; }
+  .mono { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; }
+  .red { color: var(--red); }
+  .dim { color: var(--bone-dim); }
+
+  /* Onboarding */
+  .onboard h1 { font-family: var(--display); font-size: 48px; line-height: 0.9; font-weight: 800; margin: 0 0 4px; }
+  .onboard h1 .red-dot { color: var(--red); }
+  .onboard p { color: var(--bone-dim); margin: 12px 0 36px; font-size: 14px; line-height: 1.55; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+  .form-group input {
+    width: 100%; padding: 14px 16px; border: 1px solid var(--bone-faint); background: rgba(255,255,255,0.02);
+    color: var(--bone); font-family: var(--body); font-size: 16px; border-radius: 0;
+    outline: none; transition: border-color 0.15s;
+  }
+  .form-group input:focus { border-color: var(--red); }
+  .form-group .hint { color: var(--bone-dim); font-size: 12px; margin-top: 6px; }
+
+  .btn {
+    display: block; width: 100%; padding: 16px 20px;
+    background: var(--red); color: var(--bone); border: none;
+    font-family: var(--display); font-weight: 700; font-size: 18px; letter-spacing: 0.02em;
+    cursor: pointer; transition: transform 0.08s, opacity 0.15s;
+    text-transform: uppercase;
+  }
+  .btn:active { transform: scale(0.985); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn.secondary { background: transparent; color: var(--bone); border: 1px solid var(--bone-faint); }
+  .btn.ghost { background: transparent; color: var(--bone-dim); border: none; padding: 12px; font-size: 13px; font-family: var(--mono); letter-spacing: 0.12em; }
+
+  /* Game day card */
+  .day-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; }
+  .day-meta .day-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--bone-dim); text-transform: uppercase; }
+  .day-meta .title { font-family: var(--display); font-size: 32px; font-weight: 800; letter-spacing: -0.005em; line-height: 1; }
+
+  .card {
+    border: 1px solid var(--bone-faint);
+    padding: 18px 16px;
+    margin-bottom: 14px;
+    background: rgba(255,255,255,0.015);
+  }
+  .card .card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+  .card .card-body { font-size: 14px; line-height: 1.5; color: var(--bone); }
+
+  /* Infection meter */
+  .infection {
+    border: 1px solid var(--bone-faint); padding: 18px 16px; margin-bottom: 14px;
+    background: rgba(255,255,255,0.015);
+  }
+  .infection-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .infection-pct {
+    font-family: var(--display); font-weight: 800; font-size: 44px; line-height: 0.9; color: var(--bone);
+    letter-spacing: -0.02em;
+  }
+  .infection-pct .red { color: var(--red); }
+  .infection-state { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--bone-dim); text-transform: uppercase; }
+  .infection-bar {
+    height: 6px; background: rgba(255,255,255,0.06); position: relative; overflow: hidden;
+  }
+  .infection-bar-fill {
+    height: 100%; background: var(--red); width: 0%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .infection-delta { font-family: var(--mono); font-size: 11px; color: var(--bone-dim); margin-top: 8px; }
+
+  /* Cell members */
+  .members { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .member-pill {
+    width: 32px; height: 32px; border: 1px solid var(--bone-faint);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--bone);
+    transition: all 0.3s;
+  }
+  .member-pill.you { border-color: var(--red); color: var(--red); }
+  .member-pill.decided { background: var(--red); color: var(--bone); border-color: var(--red); }
+  .member-pill.released { background: rgba(255,255,255,0.06); color: var(--bone-dim); border-color: var(--bone-faint); }
+  .member-pill.pending { opacity: 0.45; }
+  .cell-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .cell-meta-rank { font-family: var(--mono); font-size: 11px; color: var(--bone-dim); }
+  .cell-meta-rank .rank { color: var(--bone); }
+
+  /* Pressure decision buttons */
+  .decision { margin-top: 6px; }
+  .decision-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--red); text-transform: uppercase; margin-bottom: 12px; }
+  .decision-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .decision-btn {
+    padding: 22px 12px 14px; border: 1px solid var(--bone-faint);
+    background: rgba(255,255,255,0.02); color: var(--bone);
+    font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: 0.02em;
+    cursor: pointer; transition: all 0.12s;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .decision-btn .sub { font-family: var(--mono); font-size: 9px; font-weight: 400; letter-spacing: 0.14em; color: var(--bone-dim); margin-top: 6px; text-transform: uppercase; }
+  .decision-btn.hold:active { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+  .decision-btn.release:active { background: var(--red); color: var(--bone); border-color: var(--red); }
+  .decision-btn.hold.locked { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+  .decision-btn.release.locked { background: var(--red); color: var(--bone); border-color: var(--red); }
+  .decision-btn.locked .sub { color: rgba(26,22,18,0.55); }
+  .decision-btn.release.locked .sub { color: rgba(242,238,229,0.6); }
+  .decision-btn.disabled { opacity: 0.3; pointer-events: none; }
+
+  /* Sub-actions row */
+  .sub-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .sub-action {
+    border: 1px solid var(--bone-faint); padding: 12px 14px;
+    background: rgba(255,255,255,0.02);
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; transition: border-color 0.15s;
+  }
+  .sub-action:active { border-color: var(--bone-dim); }
+  .sub-action .label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; color: var(--red); text-transform: uppercase; }
+  .sub-action .value { font-size: 13px; color: var(--bone); }
+  .sub-action .value .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--red); margin-left: 8px; vertical-align: 1px; }
+
+  /* Final Day Advantage banner */
+  .advantage {
+    margin-top: 12px;
+    border: 1px solid var(--red);
+    padding: 14px 16px;
+    background: rgba(230, 57, 70, 0.08);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .advantage .label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; color: var(--red); text-transform: uppercase; }
+  .advantage .text { font-size: 13px; color: var(--bone); margin-top: 4px; }
+  .advantage .arrow { color: var(--red); font-size: 18px; }
+
+  /* Sticky footer / nav */
+  .footer-nav {
+    margin-top: auto; padding-top: 18px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--bone-hair); padding-bottom: 4px;
+  }
+  .footer-nav .text { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--bone-dim); text-transform: uppercase; }
+  .day-progress { display: flex; gap: 4px; }
+  .day-progress .day-tick {
+    width: 18px; height: 4px; background: var(--bone-faint);
+  }
+  .day-progress .day-tick.done { background: var(--bone-dim); }
+  .day-progress .day-tick.current { background: var(--red); }
+
+  /* Status bar at very top, presence indicator */
+  .presence {
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; color: var(--bone-dim); text-transform: uppercase;
+  }
+  .presence-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--red);
+    box-shadow: 0 0 0 0 rgba(230,57,70,0.6);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(230,57,70,0.6); }
+    70%  { box-shadow: 0 0 0 6px rgba(230,57,70,0); }
+    100% { box-shadow: 0 0 0 0 rgba(230,57,70,0); }
+  }
+
+  /* Reckoning state (final screen) */
+  .reckoning-screen { text-align: center; padding-top: 40px; }
+  .reckoning-screen h1 { font-family: var(--display); font-weight: 800; font-size: 64px; line-height: 0.9; margin: 0; }
+  .reckoning-screen .dot { color: var(--red); }
+  .reckoning-screen .subtitle { color: var(--bone-dim); font-size: 13px; margin: 18px 0 36px; line-height: 1.55; font-family: var(--mono); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--bone); color: var(--ink); padding: 12px 20px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 100;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Story reveal */
+  .story-text { font-size: 15px; line-height: 1.55; color: var(--bone); font-style: italic; }
+
+  /* Hidden by default */
+  .hidden { display: none !important; }
+
+  /* Sub note */
+  .subtle-note { color: var(--bone-dim); font-size: 11px; text-align: center; margin-top: 14px; font-family: var(--mono); letter-spacing: 0.12em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar" id="topbar">
+    <div class="brand">SILENT MAJORITY<span class="dot"></span></div>
+    <div id="presence-indicator" class="presence hidden">
+      <span class="presence-dot"></span>
+      <span id="presence-text">CONNECTING</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 1: Onboarding -->
+  <div class="screen onboard" id="screen-onboard">
+    <h1>INFECTION<br>DROP<span class="red-dot">.</span></h1>
+    <p>Seven days. Daily pressure decisions. The Silent Majority moves together.</p>
+
+    <div class="form-group">
+      <label>Your initial</label>
+      <input type="text" id="input-initial" placeholder="J" maxlength="1" autocomplete="off">
+      <div class="hint">A single letter. How your cell will see you.</div>
+    </div>
+
+    <div class="form-group">
+      <label>Cell code</label>
+      <input type="text" id="input-cell" placeholder="DEMO" maxlength="6" autocomplete="off" value="DEMO">
+      <div class="hint">Type DEMO to join the shared demo cell, or any new code to start your own.</div>
+    </div>
+
+    <button class="btn" id="btn-join">JOIN CELL</button>
+    <div class="subtle-note">Demo build · Not for production</div>
+  </div>
+
+  <!-- SCREEN 2: Daily loop -->
+  <div class="screen game hidden" id="screen-game">
+
+    <div class="day-meta">
+      <div>
+        <div class="day-num">DAY <span id="day-counter">01</span> / 07</div>
+        <div class="title">Infection Game</div>
+      </div>
+    </div>
+
+    <!-- Story drop -->
+    <div class="card">
+      <div class="card-label">TODAY'S STORY <span style="color: var(--bone-dim); margin-left: 6px;">· 12 SEC READ</span></div>
+      <div class="card-body story-text" id="story-text">…</div>
+    </div>
+
+    <!-- Infection status -->
+    <div class="infection">
+      <div class="card-label" style="margin-bottom: 12px;">INFECTION STATUS</div>
+      <div class="infection-row">
+        <div class="infection-pct"><span id="infection-pct">0</span><span class="red">%</span></div>
+        <div class="infection-state" id="infection-state">HOLDING</div>
+      </div>
+      <div class="infection-bar"><div class="infection-bar-fill" id="infection-bar"></div></div>
+      <div class="infection-delta" id="infection-delta">+0 TODAY</div>
+    </div>
+
+    <!-- Cell -->
+    <div class="card">
+      <div class="cell-meta">
+        <div class="card-label" style="margin: 0;">YOUR CELL · <span id="cell-count">1/6</span></div>
+        <div class="cell-meta-rank">RANK <span class="rank" id="cell-rank">—</span></div>
+      </div>
+      <div class="members" id="members"></div>
+    </div>
+
+    <!-- Pressure decision -->
+    <div class="card">
+      <div class="card-label">PRESSURE DECISION</div>
+      <div class="decision-buttons">
+        <button class="decision-btn hold" id="btn-hold">
+          HOLD
+          <span class="sub">Stay with cell</span>
+        </button>
+        <button class="decision-btn release" id="btn-release">
+          RELEASE
+          <span class="sub">Solo advantage</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sub actions -->
+    <div class="sub-actions">
+      <div class="sub-action" id="btn-rescue">
+        <div>
+          <div class="label">RESCUE</div>
+          <div class="value">Back '<span id="rescue-target">—</span>'<span class="dot"></span></div>
+        </div>
+      </div>
+      <div class="sub-action" id="btn-invite">
+        <div>
+          <div class="label">INVITE</div>
+          <div class="value">Bring 1+</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Day Advantage -->
+    <div class="advantage" id="advantage-banner">
+      <div>
+        <div class="label">FINAL DAY ADVANTAGE</div>
+        <div class="text" id="advantage-text">Pending — make today's decision</div>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+
+    <!-- Footer nav -->
+    <div class="footer-nav">
+      <button class="btn ghost" id="btn-advance">ADVANCE DAY →</button>
+      <div class="day-progress" id="day-progress"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Reckoning -->
+  <div class="screen hidden" id="screen-reckoning">
+    <div class="reckoning-screen">
+      <h1>THE<br>RECKONING<span class="dot">.</span></h1>
+      <div class="subtitle">The week is over.<br>Your cell held the line for <span class="red" id="reckoning-hold-count">0</span> of 7 days.</div>
+
+      <div class="card" style="text-align: left; margin-top: 32px;">
+        <div class="card-label">YOUR FINAL STATUS</div>
+        <div class="card-body" id="reckoning-status">…</div>
+      </div>
+
+      <button class="btn" id="btn-restart" style="margin-top: 24px;">REPLAY DEMO</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Supabase + game logic -->
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.4';
+
+  const SUPABASE_URL = 'https://aeaylyimninfdkhkusoc.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_t-KRtim6z-JJLopMFrBs1A_5soEwoey';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // ============ STATE ============
+  let state = {
+    playerId: null,
+    cellId: null,
+    cellCode: null,
+    initial: null,
+    currentDay: 1,
+    players: [],      // [{id, initial, display_name, is_active}]
+    decisions: [],    // [{player_id, day, choice}]
+    channel: null,
+  };
+
+  // ============ STORY CONTENT ============
+  const stories = {
+    1: "You sit in the cafeteria. Someone two tables over leans across his phone and says, loud enough to be heard, *'you'd never even know'.* Three people look up. He's looking at you.",
+    2: "Group chat lit up overnight. A photo. You can't make out faces. Someone wrote *'who's coming Friday'* and a flame emoji. You haven't replied yet.",
+    3: "She slides her phone across the table. The caption reads *'last time we asked you'*. You scroll the thread. Twelve people have already said yes.",
+    4: "After class. He waits for you at the bike rack. Says he respects you for not being part of it. Says you should pass the message. Says he means it as a compliment.",
+    5: "Your sister calls. She knows. You don't know how she knows. She doesn't ask anything. She just stays on the line.",
+    6: "The group split last night. Three of them left. You don't know which three. The chat is empty now. Your phone shows *typing…* and then nothing for a long time.",
+    7: "Saturday. Your cell is meeting tonight at *SCAPE. The screens are already up. Everyone is going to see the choice you made all week.",
+  };
+
+  // ============ UTIL ============
+  function toast(text, ms = 2200) {
+    const el = document.getElementById('toast');
+    el.textContent = text;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), ms);
+  }
+
+  function show(screenId) {
+    ['screen-onboard', 'screen-game', 'screen-reckoning'].forEach(id => {
+      document.getElementById(id).classList.add('hidden');
+    });
+    document.getElementById(screenId).classList.remove('hidden');
+  }
+
+  function setPresence(text, online = true) {
+    const el = document.getElementById('presence-indicator');
+    const txt = document.getElementById('presence-text');
+    el.classList.remove('hidden');
+    txt.textContent = text;
+    el.querySelector('.presence-dot').style.background = online ? 'var(--red)' : 'var(--bone-dim)';
+  }
+
+  // ============ JOIN FLOW ============
+  document.getElementById('btn-join').addEventListener('click', async () => {
+    const initial = document.getElementById('input-initial').value.trim().toUpperCase();
+    const cellCode = document.getElementById('input-cell').value.trim().toUpperCase();
+    if (!initial) { toast('Pick an initial first'); return; }
+    if (!cellCode) { toast('Cell code required'); return; }
+
+    document.getElementById('btn-join').disabled = true;
+    document.getElementById('btn-join').textContent = 'JOINING…';
+
+    try {
+      // Find or create cell
+      let { data: cell, error: e1 } = await supabase
+        .from('cells')
+        .select('*')
+        .eq('code', cellCode)
+        .maybeSingle();
+
+      if (!cell) {
+        const { data: newCell, error: e2 } = await supabase
+          .from('cells')
+          .insert({ code: cellCode, name: cellCode + ' Cell' })
+          .select()
+          .single();
+        if (e2) throw e2;
+        cell = newCell;
+      }
+
+      // Create player
+      const { data: player, error: e3 } = await supabase
+        .from('players')
+        .insert({
+          cell_id: cell.id,
+          display_name: initial,
+          initial: initial,
+        })
+        .select()
+        .single();
+      if (e3) throw e3;
+
+      state.playerId = player.id;
+      state.cellId = cell.id;
+      state.cellCode = cell.code;
+      state.initial = initial;
+      state.currentDay = cell.current_day;
+
+      // Persist to sessionStorage so refresh keeps you in the game
+      sessionStorage.setItem('idDemo', JSON.stringify({
+        playerId: player.id, cellId: cell.id, cellCode: cell.code, initial,
+      }));
+
+      await loadState();
+      subscribeRealtime();
+      renderAll();
+      show('screen-game');
+      setPresence(`CELL ${cellCode}`);
+
+    } catch (err) {
+      console.error(err);
+      toast('Join failed — try again');
+      document.getElementById('btn-join').disabled = false;
+      document.getElementById('btn-join').textContent = 'JOIN CELL';
+    }
+  });
+
+  // ============ LOAD STATE ============
+  async function loadState() {
+    // Load cell (for current_day)
+    const { data: cell } = await supabase.from('cells').select('*').eq('id', state.cellId).single();
+    if (cell) state.currentDay = cell.current_day;
+
+    // Load players in cell
+    const { data: players } = await supabase
+      .from('players')
+      .select('*')
+      .eq('cell_id', state.cellId)
+      .eq('is_active', true)
+      .order('joined_at');
+    state.players = players || [];
+
+    // Load decisions for this cell
+    const { data: decisions } = await supabase
+      .from('decisions')
+      .select('*')
+      .eq('cell_id', state.cellId);
+    state.decisions = decisions || [];
+  }
+
+  // ============ REALTIME ============
+  function subscribeRealtime() {
+    if (state.channel) state.channel.unsubscribe();
+    state.channel = supabase
+      .channel('cell:' + state.cellId)
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'players', filter: 'cell_id=eq.' + state.cellId },
+        async () => { await loadState(); renderAll(); }
+      )
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'decisions', filter: 'cell_id=eq.' + state.cellId },
+        async () => { await loadState(); renderAll(); }
+      )
+      .on('postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'cells', filter: 'id=eq.' + state.cellId },
+        async (payload) => {
+          state.currentDay = payload.new.current_day;
+          await loadState();
+          renderAll();
+          if (state.currentDay > 7) {
+            show('screen-reckoning');
+            renderReckoning();
+          }
+        }
+      )
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') setPresence(`CELL ${state.cellCode} · LIVE`);
+      });
+  }
+
+  // ============ RENDER ============
+  function renderAll() {
+    if (state.currentDay > 7) {
+      show('screen-reckoning');
+      renderReckoning();
+      return;
+    }
+    renderDay();
+    renderStory();
+    renderInfection();
+    renderCell();
+    renderDecision();
+    renderSubActions();
+    renderAdvantage();
+    renderProgress();
+  }
+
+  function renderDay() {
+    document.getElementById('day-counter').textContent = String(state.currentDay).padStart(2, '0');
+  }
+
+  function renderStory() {
+    document.getElementById('story-text').textContent = stories[state.currentDay] || '…';
+  }
+
+  function getTodayDecisionsCount() {
+    return state.decisions.filter(d => d.day === state.currentDay).length;
+  }
+
+  function getTotalReleasesAcrossWeek() {
+    return state.decisions.filter(d => d.choice === 'RELEASE').length;
+  }
+
+  function calculateInfection() {
+    // Base: 30% on Day 1, grows or shrinks based on decisions
+    // Each RELEASE adds; each HOLD subtracts a smaller amount
+    const totalReleases = state.decisions.filter(d => d.choice === 'RELEASE').length;
+    const totalHolds = state.decisions.filter(d => d.choice === 'HOLD').length;
+    const cellSize = Math.max(state.players.length, 1);
+    const dayMultiplier = state.currentDay * 2;
+    const base = 30 + dayMultiplier;
+    const releaseEffect = (totalReleases / cellSize) * 12;
+    const holdEffect = (totalHolds / cellSize) * 6;
+    let pct = base + releaseEffect - holdEffect;
+    return Math.max(8, Math.min(96, Math.round(pct)));
+  }
+
+  function calculateDelta() {
+    // Decisions made today
+    const todayDecisions = state.decisions.filter(d => d.day === state.currentDay);
+    const todayReleases = todayDecisions.filter(d => d.choice === 'RELEASE').length;
+    const todayHolds = todayDecisions.filter(d => d.choice === 'HOLD').length;
+    return todayReleases * 3 - todayHolds * 1;
+  }
+
+  function renderInfection() {
+    const pct = calculateInfection();
+    const delta = calculateDelta();
+    document.getElementById('infection-pct').textContent = pct;
+    document.getElementById('infection-bar').style.width = pct + '%';
+    const state_text = pct < 40 ? 'HOLDING' : pct < 65 ? 'PRESSURED' : pct < 85 ? 'BREACHING' : 'CRITICAL';
+    document.getElementById('infection-state').textContent = state_text;
+    document.getElementById('infection-delta').textContent = (delta >= 0 ? '+' : '') + delta + ' TODAY';
+  }
+
+  function renderCell() {
+    document.getElementById('cell-count').textContent = state.players.length + '/6';
+    document.getElementById('cell-rank').textContent = state.players.length >= 4 ? '12' : '—';
+
+    const container = document.getElementById('members');
+    container.innerHTML = '';
+    state.players.forEach(p => {
+      const pill = document.createElement('div');
+      pill.classList.add('member-pill');
+      if (p.id === state.playerId) pill.classList.add('you');
+      const todayDecision = state.decisions.find(d => d.player_id === p.id && d.day === state.currentDay);
+      if (todayDecision) {
+        if (todayDecision.choice === 'HOLD') pill.classList.add('decided');
+        else pill.classList.add('released');
+      } else {
+        pill.classList.add('pending');
+      }
+      pill.textContent = p.initial;
+      container.appendChild(pill);
+    });
+
+    // Empty slots
+    for (let i = state.players.length; i < 6; i++) {
+      const pill = document.createElement('div');
+      pill.classList.add('member-pill', 'pending');
+      pill.style.borderStyle = 'dashed';
+      pill.textContent = '+';
+      pill.style.color = 'var(--bone-faint)';
+      container.appendChild(pill);
+    }
+  }
+
+  function getMyDecisionToday() {
+    return state.decisions.find(d => d.player_id === state.playerId && d.day === state.currentDay);
+  }
+
+  function renderDecision() {
+    const myDecision = getMyDecisionToday();
+    const holdBtn = document.getElementById('btn-hold');
+    const releaseBtn = document.getElementById('btn-release');
+    holdBtn.classList.remove('locked', 'disabled');
+    releaseBtn.classList.remove('locked', 'disabled');
+    if (myDecision) {
+      if (myDecision.choice === 'HOLD') {
+        holdBtn.classList.add('locked');
+        releaseBtn.classList.add('disabled');
+      } else {
+        releaseBtn.classList.add('locked');
+        holdBtn.classList.add('disabled');
+      }
+    }
+  }
+
+  function renderSubActions() {
+    // Pick a "rescue" target: a cell mate who released today, or any other cellmate
+    const others = state.players.filter(p => p.id !== state.playerId);
+    let rescueTarget = others.find(p => {
+      const d = state.decisions.find(x => x.player_id === p.id && x.day === state.currentDay);
+      return d && d.choice === 'RELEASE';
+    });
+    if (!rescueTarget && others.length > 0) rescueTarget = others[0];
+    document.getElementById('rescue-target').textContent = rescueTarget ? rescueTarget.initial : '—';
+  }
+
+  function renderAdvantage() {
+    const myDecision = getMyDecisionToday();
+    const text = document.getElementById('advantage-text');
+    if (myDecision && myDecision.choice === 'HOLD') {
+      text.textContent = 'Priority entry secured →';
+    } else if (myDecision && myDecision.choice === 'RELEASE') {
+      text.textContent = 'Solo advantage claimed →';
+    } else {
+      text.textContent = 'Pending — make today\'s decision';
+    }
+  }
+
+  function renderProgress() {
+    const container = document.getElementById('day-progress');
+    container.innerHTML = '';
+    for (let i = 1; i <= 7; i++) {
+      const tick = document.createElement('div');
+      tick.classList.add('day-tick');
+      if (i < state.currentDay) tick.classList.add('done');
+      if (i === state.currentDay) tick.classList.add('current');
+      container.appendChild(tick);
+    }
+  }
+
+  function renderReckoning() {
+    // Count my HOLDs vs RELEASEs
+    const myDecisions = state.decisions.filter(d => d.player_id === state.playerId);
+    const holds = myDecisions.filter(d => d.choice === 'HOLD').length;
+    const releases = myDecisions.filter(d => d.choice === 'RELEASE').length;
+
+    // Cell's collective holds (max one per player per day)
+    const cellHoldDays = new Set();
+    state.decisions.forEach(d => {
+      if (d.choice === 'HOLD') cellHoldDays.add(d.day);
+    });
+
+    document.getElementById('reckoning-hold-count').textContent = cellHoldDays.size;
+
+    let status = '';
+    if (holds >= 5) {
+      status = `You held the line for ${holds} of 7 days. Most people don't want to follow the wrong crowd. They just need backup.`;
+    } else if (holds >= 3) {
+      status = `You held ${holds} times, released ${releases}. The pressure was real. You showed up more than you broke.`;
+    } else {
+      status = `You released more than you held. The infection spread. Quiet pressure. Loud consequences.`;
+    }
+    document.getElementById('reckoning-status').textContent = status;
+  }
+
+  // ============ ACTIONS ============
+  document.getElementById('btn-hold').addEventListener('click', () => makeDecision('HOLD'));
+  document.getElementById('btn-release').addEventListener('click', () => makeDecision('RELEASE'));
+
+  async function makeDecision(choice) {
+    if (getMyDecisionToday()) return;
+    try {
+      const { error } = await supabase.from('decisions').insert({
+        player_id: state.playerId,
+        cell_id: state.cellId,
+        day: state.currentDay,
+        choice,
+      });
+      if (error) throw error;
+      toast(choice === 'HOLD' ? 'YOU HELD THE LINE' : 'YOU RELEASED');
+    } catch (err) {
+      console.error(err);
+      toast('Decision failed');
+    }
+  }
+
+  document.getElementById('btn-advance').addEventListener('click', async () => {
+    const nextDay = state.currentDay + 1;
+    try {
+      const { error } = await supabase
+        .from('cells')
+        .update({ current_day: nextDay })
+        .eq('id', state.cellId);
+      if (error) throw error;
+      toast(nextDay > 7 ? 'THE RECKONING' : `DAY ${nextDay}`);
+    } catch (err) {
+      console.error(err);
+      toast('Advance failed');
+    }
+  });
+
+  document.getElementById('btn-rescue').addEventListener('click', () => {
+    const target = document.getElementById('rescue-target').textContent;
+    if (target === '—') { toast('No one to back up'); return; }
+    toast(`BACKING ${target}`);
+  });
+
+  document.getElementById('btn-invite').addEventListener('click', () => {
+    const url = window.location.href.split('?')[0] + '?cell=' + state.cellCode;
+    if (navigator.share) {
+      navigator.share({ title: 'Join my Resistance Cell', text: 'Cell code: ' + state.cellCode, url });
+    } else {
+      navigator.clipboard.writeText(url).then(() => toast('LINK COPIED'));
+    }
+  });
+
+  document.getElementById('btn-restart').addEventListener('click', async () => {
+    sessionStorage.removeItem('idDemo');
+    if (state.channel) state.channel.unsubscribe();
+    state = { playerId: null, cellId: null, cellCode: null, initial: null, currentDay: 1, players: [], decisions: [], channel: null };
+    document.getElementById('btn-join').disabled = false;
+    document.getElementById('btn-join').textContent = 'JOIN CELL';
+    document.getElementById('input-initial').value = '';
+    document.getElementById('input-cell').value = 'DEMO';
+    document.getElementById('presence-indicator').classList.add('hidden');
+    show('screen-onboard');
+  });
+
+  // ============ AUTOJOIN FROM URL ============
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlCell = urlParams.get('cell');
+  if (urlCell) {
+    document.getElementById('input-cell').value = urlCell.toUpperCase();
+  }
+
+  // ============ RESUME SESSION ============
+  const saved = sessionStorage.getItem('idDemo');
+  if (saved) {
+    try {
+      const s = JSON.parse(saved);
+      state.playerId = s.playerId;
+      state.cellId = s.cellId;
+      state.cellCode = s.cellCode;
+      state.initial = s.initial;
+      loadState().then(() => {
+        if (state.currentDay > 7) {
+          show('screen-reckoning');
+          renderReckoning();
+        } else {
+          renderAll();
+          show('screen-game');
+        }
+        subscribeRealtime();
+        setPresence(`CELL ${state.cellCode}`);
+      }).catch(err => {
+        console.error(err);
+        sessionStorage.removeItem('idDemo');
+      });
+    } catch(e) { sessionStorage.removeItem('idDemo'); }
+  }
+</script>
+
+</body>
+</html>
