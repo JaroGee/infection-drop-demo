@@ -3,230 +3,351 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1A1612">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <title>Infection Game · Working Prototype · How to Use</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;700;800;900&family=Bricolage+Grotesque:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1A1612;
-    --bone: #F2EEE5;
-    --bone-dim: rgba(242,238,229,0.62);
-    --bone-faint: rgba(242,238,229,0.18);
-    --bone-hair: rgba(242,238,229,0.10);
-    --red: #E63946;
-    --display: 'Big Shoulders', 'Arial Black', sans-serif;
-    --body: 'Bricolage Grotesque', system-ui, sans-serif;
-    --mono: 'Geist Mono', 'SF Mono', Menlo, monospace;
+    --ink:   #1A1612;
+    --bone:  #F2EEE5;
+    --red:   #E63946;
+    --ink60: rgba(26,22,18,0.60);
+    --ink20: rgba(26,22,18,0.20);
+    --ink10: rgba(26,22,18,0.10);
+    --red10: rgba(230,57,70,0.08);
+
+    --display: 'Big Shoulders Display', 'Arial Black', sans-serif;
+    --body:    'Bricolage Grotesque', system-ui, sans-serif;
+    --mono:    'Geist Mono', 'SF Mono', Menlo, monospace;
   }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--ink);
-    color: var(--bone);
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bone);
+    color: var(--ink);
     font-family: var(--body);
-    font-size: 15.5px;
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 28px 80px; }
 
-  .sys {
-    display: flex; justify-content: space-between;
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--bone-dim);
-    padding-bottom: 14px; border-bottom: 1px solid var(--bone-hair); margin-bottom: 42px;
+  /* ── PAGE WRAPPER ── */
+  .page { max-width: 740px; margin: 0 auto; padding: 64px 36px 96px; }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 52px;
   }
-  .sys b { color: var(--bone); font-weight: 600; }
-  .sep { color: var(--bone-faint); margin: 0 6px; }
-
-  h1.title {
-    font-family: var(--display); font-weight: 800; font-size: 64px;
-    line-height: 0.92; letter-spacing: -0.01em; margin: 0;
+  .lockup {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1;
   }
-  h1.title .dot { color: var(--red); }
-  h1.title .sub {
-    display: block; font-size: 22px; color: var(--red); margin-top: 4px;
-    font-weight: 700; letter-spacing: 0.005em;
+  .lockup .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--red);
+    border-radius: 50%;
+    margin-left: 1px;
+    vertical-align: 2px;
+  }
+  .doc-id {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink60);
+    text-align: right;
+    line-height: 1.6;
   }
 
-  .intro { color: var(--bone-dim); font-size: 16px; line-height: 1.6; margin: 28px 0 0; max-width: 620px; }
+  /* ── TITLE BLOCK ── */
+  .title-block { margin-bottom: 48px; }
+  .eyebrow-small {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 72px;
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  h1 .dot { color: var(--red); }
+  .title-intro {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink60);
+    max-width: 540px;
+  }
 
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--ink20); margin: 52px 0; }
+
+  /* ── SECTION HEADER ── */
+  .section-header { margin-bottom: 24px; }
   .eyebrow {
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--red); margin: 56px 0 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
   }
-  h2.section {
-    font-family: var(--display); font-weight: 800; font-size: 32px;
-    line-height: 1; letter-spacing: -0.005em; margin: 0 0 18px;
+  h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 0.95;
+    letter-spacing: -0.005em;
+    color: var(--ink);
   }
-  h2.section .dot { color: var(--red); }
+  h2 .dot { color: var(--red); }
 
-  p { margin: 0 0 14px; }
-  p.lead { font-size: 16px; color: var(--bone); }
-  strong { color: var(--bone); font-weight: 600; }
-  em { color: var(--bone-dim); font-style: italic; }
+  /* ── BODY COPY ── */
+  p { margin-bottom: 14px; color: var(--ink); font-size: 15px; line-height: 1.65; }
+  p.lead { font-size: 17px; color: var(--ink); line-height: 1.6; margin-bottom: 18px; }
+  p:last-child { margin-bottom: 0; }
+  strong { font-weight: 600; color: var(--ink); }
 
-  .step-list { counter-reset: step; list-style: none; padding: 0; margin: 18px 0 0; }
+  /* ── TWO-COLUMN CARDS ── */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 28px;
+  }
+  @media (max-width: 560px) { .cards { grid-template-columns: 1fr; } }
+  .card {
+    border: 1.5px solid var(--ink20);
+    padding: 20px 20px 22px;
+  }
+  .card-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .card-title {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .card p { font-size: 13.5px; color: var(--ink60); line-height: 1.6; margin: 0; }
+
+  /* ── STEP LIST ── */
+  .step-list { list-style: none; padding: 0; margin-top: 28px; }
   .step-list li {
-    counter-increment: step;
-    display: grid; grid-template-columns: 44px 1fr; gap: 14px;
-    padding: 16px 0; border-bottom: 1px solid var(--bone-hair);
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--ink10);
   }
-  .step-list li::before {
-    content: counter(step, decimal-leading-zero);
-    font-family: var(--mono); color: var(--red); font-size: 12px;
-    letter-spacing: 0.14em; padding-top: 3px;
+  .step-list li:first-child { border-top: 1px solid var(--ink10); }
+  .step-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--red);
+    padding-top: 4px;
   }
-  .step-list li .step-title {
-    font-family: var(--display); font-size: 19px; font-weight: 700;
-    line-height: 1.1; letter-spacing: 0; margin-bottom: 4px;
+  .step-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 6px;
   }
-  .step-list li .step-body {
-    font-size: 14.5px; color: var(--bone-dim); line-height: 1.55;
-  }
-  .step-list li .step-body strong { color: var(--bone); }
+  .step-body { font-size: 14px; color: var(--ink60); line-height: 1.6; }
+  .step-body strong { color: var(--ink); }
 
-  .why-cards {
-    display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 20px;
+  /* ── ROADMAP LIST ── */
+  .roadmap { list-style: none; padding: 0; margin-top: 28px; }
+  .roadmap li {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 28px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--ink10);
+    align-items: start;
   }
-  @media (min-width: 600px) {
-    .why-cards { grid-template-columns: 1fr 1fr; }
+  .roadmap li:first-child { border-top: 1px solid var(--ink10); }
+  .roadmap-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--red);
+    line-height: 1.5;
+    padding-top: 2px;
   }
-  .why-card {
-    border: 1px solid var(--bone-faint); padding: 18px 18px 20px;
-  }
-  .why-card .why-label {
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
-    color: var(--red); text-transform: uppercase;
-  }
-  .why-card .why-title {
-    font-family: var(--display); font-size: 22px; font-weight: 700;
-    line-height: 1.05; margin: 8px 0;
-  }
-  .why-card p { font-size: 13.5px; color: var(--bone-dim); line-height: 1.55; margin: 0; }
-
-  .roadmap-list { list-style: none; padding: 0; margin: 14px 0 0; }
-  .roadmap-list li {
-    padding: 14px 0; border-bottom: 1px solid var(--bone-hair);
-    display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: start;
-  }
-  .roadmap-list li .roadmap-label {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
-    color: var(--red); text-transform: uppercase; padding-top: 2px;
-  }
-  .roadmap-list li .roadmap-body { font-size: 14.5px; color: var(--bone-dim); line-height: 1.55; }
-  .roadmap-list li .roadmap-body strong { color: var(--bone); }
-  @media (max-width: 599px) {
-    .roadmap-list li { grid-template-columns: 1fr; gap: 6px; }
+  .roadmap-body { font-size: 14px; color: var(--ink60); line-height: 1.6; }
+  .roadmap-body strong { color: var(--ink); }
+  @media (max-width: 560px) {
+    .roadmap li { grid-template-columns: 1fr; gap: 6px; }
   }
 
-  .note {
-    margin-top: 36px; padding: 18px 20px;
-    border-left: 2px solid var(--red); background: rgba(230,57,70,0.04);
+  /* ── CALLOUT BOX ── */
+  .callout {
+    border-left: 3px solid var(--red);
+    background: var(--red10);
+    padding: 18px 22px;
+    margin-top: 40px;
   }
-  .note .note-label {
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--red); margin-bottom: 6px;
+  .callout-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
   }
-  .note p { margin: 0; font-size: 14.5px; color: var(--bone); line-height: 1.6; }
+  .callout p { font-size: 14px; color: var(--ink); line-height: 1.65; margin: 0; }
 
+  /* ── FOOTER ── */
   .footer {
-    margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--bone-hair);
-    display: flex; justify-content: space-between;
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--bone-dim);
+    margin-top: 72px;
+    padding-top: 20px;
+    border-top: 2px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
   }
-  .footer .lockup {
-    font-family: var(--display); font-weight: 800; color: var(--bone);
-    letter-spacing: 0.02em; font-size: 12px;
-  }
-  .footer .lockup .dot {
-    display: inline-block; width: 6px; height: 6px;
-    background: var(--red); border-radius: 50%; margin-left: 2px; vertical-align: 1px;
+  .footer .lockup { font-size: 11px; }
+  .footer-right {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink60);
   }
 
-  a { color: var(--red); text-decoration: none; border-bottom: 1px solid rgba(230,57,70,0.3); }
-  a:hover { border-bottom-color: var(--red); }
+  /* ── PRINT ── */
+  @media print {
+    body { font-size: 13px; }
+    .page { padding: 40px 32px 60px; }
+    h1 { font-size: 56px; }
+    h2 { font-size: 28px; }
+    .cards { grid-template-columns: 1fr 1fr; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="page">
 
-  <div class="sys">
-    <div><b>SILENT MAJORITY</b><span class="sep">/</span>INFECTION DROP<span class="sep">/</span>WORKING PROTOTYPE</div>
-    <div>DOC<span class="sep">/</span>SM-PROTO<span class="sep">/</span><b>HOW TO USE</b></div>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="lockup">SILENT MAJORITY<span class="dot"></span></div>
+    <div class="doc-id">
+      INFECTION DROP<br>
+      WORKING PROTOTYPE<br>
+      HOW TO USE
+    </div>
   </div>
 
-  <h1 class="title">
-    THE INFECTION<br>GAME<span class="dot">.</span>
-    <span class="sub">Working Prototype · How to Use</span>
-  </h1>
+  <!-- TITLE -->
+  <div class="title-block">
+    <div class="eyebrow-small">Prototype Guide</div>
+    <h1>THE<br>INFECTION<br>GAME<span class="dot">.</span></h1>
+    <p class="title-intro">
+      A plain-language guide to what this prototype is, why it exists, and how to run a demo.
+      Written for anyone seeing this for the first time.
+    </p>
+  </div>
 
-  <p class="intro">
-    A plain-language guide to what this prototype is, why it exists, and how to run a demo.
-    Written for anyone seeing this for the first time.
-  </p>
+  <hr class="divider">
 
-  <!-- WHAT IS THIS -->
-  <div class="eyebrow">01 · WHAT IS THIS</div>
-  <h2 class="section">A game about peer pressure<span class="dot">.</span></h2>
+  <!-- SECTION 01 -->
+  <div class="section-header">
+    <div class="eyebrow">01 — What is this</div>
+    <h2>A game about<br>peer pressure<span class="dot">.</span></h2>
+  </div>
 
   <p class="lead">
-    This is a phone-based game designed to make young people feel — not just hear about — how peer pressure works.
+    This is a phone-based game designed to make young people <strong>feel</strong> — not just hear about —
+    how peer pressure works.
   </p>
 
   <p>
-    Young people often make risky decisions not because they want to, but because everyone around them seems to be doing it.
-    That social pressure is hard to see and even harder to resist. This game makes it visible.
+    Young people often make risky decisions not because they want to, but because everyone around them
+    seems to be doing it. That social pressure is hard to see and even harder to resist. This game makes it visible.
   </p>
 
   <p>
-    Players join a small group called a <strong>cell</strong> — think of it like a friend group. Every day for seven days,
-    they receive a short story about a pressure situation a teenager might actually face. Then they make a choice:
-    <strong>Hold</strong> (stay firm with their group) or <strong>Release</strong> (give in for a personal advantage).
+    Players join a small group called a <strong>cell</strong> — think of it as a friend group. Every day for
+    seven days, they receive a short story about a pressure situation a teenager might actually face.
+    Then they make one choice: <strong>Hold</strong> (stay firm with the group) or <strong>Release</strong>
+    (give in for a personal advantage).
   </p>
 
   <p>
-    The twist: every player can see what the rest of their group is doing, in real time, on their own phone.
-    When someone gives in, the <strong>infection meter</strong> on every phone goes up. When people hold firm, it goes down.
-    The group's choices are no longer invisible — they are live, on screen, felt by everyone.
+    The twist: every player can see what the rest of their group is choosing, in real time, on their own phone.
+    When someone gives in, the <strong>Infection Meter</strong> on every phone goes up.
+    When people hold firm, it goes down. The group's choices are no longer invisible —
+    they are live, on screen, felt by everyone at once.
   </p>
 
-  <div class="why-cards">
-    <div class="why-card">
-      <div class="why-label">THE METAPHOR</div>
-      <div class="why-title">Peer pressure as infection</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">The Metaphor</div>
+      <div class="card-title">Peer pressure as infection</div>
       <p>When one person gives in, it makes it easier for others to follow. The "infection" spreads through a group the same way risky behaviour does — quietly, socially, one decision at a time.</p>
     </div>
-    <div class="why-card">
-      <div class="why-label">THE INSIGHT</div>
-      <div class="why-title">Most people want to hold</div>
+    <div class="card">
+      <div class="card-label">The Insight</div>
+      <div class="card-title">Most people want to hold</div>
       <p>Research shows most young people do not actually want to engage in risky behaviour — they just feel alone in that position. Seeing your group hold firm in real time gives you the social backing to do the same.</p>
     </div>
   </div>
 
-  <!-- WHY IT EXISTS -->
-  <div class="eyebrow">02 · WHY IT EXISTS</div>
-  <h2 class="section">Part of a larger campaign<span class="dot">.</span></h2>
+  <hr class="divider">
+
+  <!-- SECTION 02 -->
+  <div class="section-header">
+    <div class="eyebrow">02 — Why it exists</div>
+    <h2>Part of a larger<br>campaign<span class="dot">.</span></h2>
+  </div>
 
   <p class="lead">
-    This prototype is built for NCADA's <em>Silent Majority</em> pilot — a street campaign and live event
-    designed to shift how young people in Singapore think about drug use and peer influence.
+    This prototype is built for NCADA's <strong>Silent Majority</strong> pilot — a street campaign and
+    live event designed to shift how young people in Singapore think about drug use and peer influence.
   </p>
 
   <p>
-    The campaign runs over seven days on the streets around *SCAPE Somerset, a youth hub in Orchard Road.
-    Young people encounter it on the street, join a cell with their friends, and play the daily game on their phones
-    as the week progresses.
+    The campaign runs over seven days on the streets around <strong>*SCAPE Somerset</strong>, a youth hub
+    in Orchard Road. Young people encounter it on the street, join a cell with their friends,
+    and play the daily game on their phones as the week progresses.
   </p>
 
   <p>
     On the final Saturday, every player's week of decisions feeds into a live broadcast moment at *SCAPE —
-    <strong>The Reckoning</strong> — where the collective result of the week is revealed on screen to everyone
-    in the room. The campaign ends with a structured conversation and a direct link to support resources.
+    <strong>The Reckoning</strong> — where the collective result of the week is revealed on screen
+    to everyone in the room. The campaign closes with a structured conversation and a direct link
+    to support resources.
   </p>
 
   <p>
@@ -234,103 +355,121 @@
     so they know what that feels like before they face real pressure.
   </p>
 
-  <!-- HOW TO RUN A DEMO -->
-  <div class="eyebrow">03 · HOW TO RUN A DEMO</div>
-  <h2 class="section">Six steps, two phones<span class="dot">.</span></h2>
+  <hr class="divider">
 
-  <p>Best experienced with two people side by side, each on their own phone. One phone works too for a solo walkthrough. The whole demo takes under five minutes.</p>
+  <!-- SECTION 03 -->
+  <div class="section-header">
+    <div class="eyebrow">03 — How to run a demo</div>
+    <h2>Six steps,<br>two phones<span class="dot">.</span></h2>
+  </div>
+
+  <p>Best experienced with two people side by side, each on their own phone.
+  One phone also works for a solo walkthrough. The whole demo takes under five minutes.</p>
 
   <ol class="step-list">
     <li>
+      <div class="step-num">01</div>
       <div>
         <div class="step-title">Open the link on your phone</div>
         <div class="step-body">
-          Visit <strong>infection-drop-demo.vercel.app</strong> in any mobile browser — Safari, Chrome, anything.
-          No app to download. No account to create. Just open the link.
+          Visit <strong>infection-drop-demo.vercel.app</strong> in any mobile browser —
+          Safari, Chrome, anything. No app to download. No account to create.
         </div>
       </div>
     </li>
     <li>
+      <div class="step-num">02</div>
       <div>
         <div class="step-title">Choose your initial</div>
         <div class="step-body">
-          Type one letter — your initial. This is how the rest of the cell will see you on screen.
-          If two people are demoing together, use different letters so you can tell yourselves apart.
+          Type one letter. The cell sees you only by this letter.
+          If two people are demoing together, use different letters so you can tell yourselves apart on screen.
         </div>
       </div>
     </li>
     <li>
+      <div class="step-num">03</div>
       <div>
         <div class="step-title">Enter the cell code</div>
         <div class="step-body">
           Both phones must type the <strong>same code</strong> to join the same cell.
-          Use <strong>DEMO</strong> for a shared demo cell, or make up any word you like.
+          Use <strong>DEMO</strong>, or make up any word you both agree on.
           The code is what links two phones together.
         </div>
       </div>
     </li>
     <li>
+      <div class="step-num">04</div>
       <div>
-        <div class="step-title">Read the day's story and make your choice</div>
+        <div class="step-title">Read the story and make your choice</div>
         <div class="step-body">
-          Each day opens with a short scenario — a moment of social pressure a teenager might recognise.
-          Tap <strong>HOLD</strong> to stay firm with the group, or <strong>RELEASE</strong> to go it alone.
-          Watch the other phone — when your partner decides, their initial changes colour on your screen
-          and the infection meter responds immediately.
+          Each day opens with a short pressure scenario. Tap <strong>HOLD</strong> to stay firm,
+          or <strong>RELEASE</strong> to go it alone. Watch the other phone —
+          when your partner decides, their initial changes colour and the infection meter responds immediately.
         </div>
       </div>
     </li>
     <li>
+      <div class="step-num">05</div>
       <div>
         <div class="step-title">Advance through the days</div>
         <div class="step-body">
-          Tap <strong>Advance Day</strong> at the bottom to move to the next day.
-          There are seven days in total. After Day 7, both phones arrive at
-          <strong>The Reckoning</strong> — a summary of the week's decisions across the whole cell.
+          Tap <strong>Advance Day</strong> at the bottom to move forward.
+          Seven days total. After Day 7, both phones arrive at <strong>The Reckoning</strong> —
+          a summary of the week's decisions across the whole cell.
         </div>
       </div>
     </li>
     <li>
+      <div class="step-num">06</div>
       <div>
         <div class="step-title">Reset for the next group</div>
         <div class="step-body">
           On The Reckoning screen, tap <strong>Replay Demo</strong>. This wipes all decisions,
           removes all players, and resets the cell back to Day 1 — completely clean for the next group.
-          No extra steps, no URL, no manual cleanup needed.
+          No extra steps needed.
         </div>
       </div>
     </li>
   </ol>
 
-  <!-- WHAT TO POINT OUT -->
-  <div class="eyebrow">04 · WHAT TO POINT OUT</div>
-  <h2 class="section">Five things to show your audience<span class="dot">.</span></h2>
+  <hr class="divider">
 
-  <p>If you are demonstrating this to someone who has not seen it before, these are the moments worth highlighting.</p>
+  <!-- SECTION 04 -->
+  <div class="section-header">
+    <div class="eyebrow">04 — What to point out</div>
+    <h2>Five things to show<br>your audience<span class="dot">.</span></h2>
+  </div>
+
+  <p>If you are demonstrating this to someone who has not seen it before,
+  these are the moments worth highlighting.</p>
 
   <ol class="step-list">
     <li>
+      <div class="step-num">01</div>
       <div>
         <div class="step-title">The story makes the choice feel real</div>
         <div class="step-body">
-          The daily scenario is not a survey question. It is a situation — a friend group chat,
-          someone waiting at the bike rack after school, a photo circulating overnight.
-          Young people recognise these moments. That recognition is the point.
+          Each day's scenario is not a survey question — it is a situation young people actually recognise.
+          A friend group chat. Someone waiting after school. A photo circulating overnight.
+          That recognition is what makes the decision feel like a real choice, not an exercise.
         </div>
       </div>
     </li>
     <li>
+      <div class="step-num">02</div>
       <div>
         <div class="step-title">One phone updates the other instantly</div>
         <div class="step-body">
-          When one player makes their choice, the other phone updates within a fraction of a second —
+          When one player decides, the other phone updates within a fraction of a second —
           no refresh, no waiting. Show this live. It is the most visceral part of the demo.
         </div>
       </div>
     </li>
     <li>
+      <div class="step-num">03</div>
       <div>
-        <div class="step-title">The infection meter is the group, not the individual</div>
+        <div class="step-title">The infection meter belongs to the group</div>
         <div class="step-body">
           Point out that the percentage on screen belongs to the whole cell, not any one player.
           Individual decisions feed a shared outcome. That is the campaign's core idea made visible.
@@ -338,65 +477,72 @@
       </div>
     </li>
     <li>
+      <div class="step-num">04</div>
       <div>
         <div class="step-title">The member dots tell the social story at a glance</div>
         <div class="step-body">
-          Red filled dot: that player held. Grey dot: they released. Faded: not yet decided.
-          In five seconds, anyone can read the social state of the entire group without a word being said.
+          Red filled: that player held. Grey: they released. Faded: not yet decided.
+          The entire group's social state, readable in under five seconds, without a word said.
         </div>
       </div>
     </li>
     <li>
+      <div class="step-num">05</div>
       <div>
         <div class="step-title">The Reckoning is the campaign's climax</div>
         <div class="step-body">
           In the full live event at *SCAPE Somerset, The Reckoning is a broadcast moment —
           the week's results shown on screen to an audience of hundreds. This prototype
-          gives you a feel for how that moment lands at a small scale.
+          gives you a small-scale feel for how that moment lands.
         </div>
       </div>
     </li>
   </ol>
 
-  <!-- PRODUCTION ROADMAP -->
-  <div class="eyebrow">05 · PRODUCTION ROADMAP</div>
-  <h2 class="section">What the full pilot adds on top of this<span class="dot">.</span></h2>
+  <hr class="divider">
 
-  <p>This prototype covers the player-side daily loop only. The full pilot build extends this into a complete campaign infrastructure.</p>
+  <!-- SECTION 05 -->
+  <div class="section-header">
+    <div class="eyebrow">05 — Production roadmap</div>
+    <h2>What the full pilot<br>adds on top of this<span class="dot">.</span></h2>
+  </div>
 
-  <ul class="roadmap-list">
+  <p>This prototype covers the player-side daily loop only.
+  The full pilot build extends this into a complete campaign infrastructure.</p>
+
+  <ul class="roadmap">
     <li>
-      <div class="roadmap-label">VERIFIED SIGN-IN</div>
-      <div class="roadmap-body">Phone number sign-in with consent capture, replacing the demo's open cell-code model. Every player is verified, every consent record is retained, age-gating is applied where required.</div>
+      <div class="roadmap-label">Verified Sign-In</div>
+      <div class="roadmap-body">Phone number sign-in with consent capture, replacing the demo's open cell-code model. Every player is verified, every consent record is retained, age-gating applied where required.</div>
     </li>
     <li>
-      <div class="roadmap-label">CONTENT MODERATION</div>
+      <div class="roadmap-label">Content Moderation</div>
       <div class="roadmap-body">AI moderation with human oversight for all participant content. Sensitive content is escalated; final decisions remain with the human team.</div>
     </li>
     <li>
-      <div class="roadmap-label">THE CONFESSIONAL</div>
+      <div class="roadmap-label">The Confessional</div>
       <div class="roadmap-body">A physical voice station on the street where passersby can anonymously record a short voice message. Recordings are modulated, moderated, and fed into the Saturday broadcast.</div>
     </li>
     <li>
-      <div class="roadmap-label">THE RECKONING — LIVE VOTE</div>
+      <div class="roadmap-label">The Reckoning — Live Vote</div>
       <div class="roadmap-body">The anchoring vote moment at the live event. Every phone in the room and every online viewer responds simultaneously, with instant aggregation shown on the broadcast screen.</div>
     </li>
     <li>
-      <div class="roadmap-label">THE CONVERSATION INTERFACE</div>
+      <div class="roadmap-label">The Conversation Interface</div>
       <div class="roadmap-body">The closing segment of the live event. A structured conversation flow, exit pathways, support resource handoff, and post-event survey aligned to NCADA's HIGH evaluation framework.</div>
     </li>
     <li>
-      <div class="roadmap-label">STREET INTEGRATION</div>
+      <div class="roadmap-label">Street Integration</div>
       <div class="roadmap-body">The plaza interactive at *SCAPE Somerset, the street-to-phone recruitment flow, and on-site booth operations. Sub-200ms input-to-display response under live operating conditions.</div>
     </li>
     <li>
-      <div class="roadmap-label">REPORTING &amp; EVALUATION</div>
+      <div class="roadmap-label">Reporting &amp; Evaluation</div>
       <div class="roadmap-body">Pre and post measurement informed by NCADA's HIGH methodology. Operational dashboards, nightly digests, and a final NCADA-ready evaluation report at the close of the pilot.</div>
     </li>
   </ul>
 
-  <div class="note">
-    <div class="note-label">A NOTE ON THIS PROTOTYPE</div>
+  <div class="callout">
+    <div class="callout-label">A note on this prototype</div>
     <p>
       This is a working demo, not the finished product. The content is illustrative, there is no moderation,
       and anyone can join with any cell code. It is built to show the core mechanic in your hand —
@@ -405,9 +551,10 @@
     </p>
   </div>
 
+  <!-- FOOTER -->
   <div class="footer">
     <div class="lockup">SILENT MAJORITY<span class="dot"></span></div>
-    <div>PILOT PROTOTYPE &middot; 2026</div>
+    <div class="footer-right">Pilot Prototype · 2026</div>
   </div>
 
 </div>
