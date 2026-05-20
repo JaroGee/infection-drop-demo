@@ -770,9 +770,19 @@
   });
 
   document.getElementById('btn-restart').addEventListener('click', async () => {
+    const cellId = state.cellId;
     sessionStorage.removeItem('idDemo');
     if (state.channel) state.channel.unsubscribe();
     state = { playerId: null, cellId: null, cellCode: null, initial: null, currentDay: 1, players: [], decisions: [], channel: null };
+
+    if (cellId) {
+      await Promise.all([
+        supabase.from('decisions').delete().eq('cell_id', cellId),
+        supabase.from('players').delete().eq('cell_id', cellId),
+        supabase.from('cells').update({ current_day: 1 }).eq('id', cellId),
+      ]);
+    }
+
     document.getElementById('btn-join').disabled = false;
     document.getElementById('btn-join').textContent = 'JOIN CELL';
     document.getElementById('input-initial').value = '';

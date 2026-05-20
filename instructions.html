@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1A1612">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<title>Infection Game · Working Prototype · How to Use</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;700;800;900&family=Bricolage+Grotesque:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1A1612;
+    --bone: #F2EEE5;
+    --bone-dim: rgba(242,238,229,0.62);
+    --bone-faint: rgba(242,238,229,0.18);
+    --bone-hair: rgba(242,238,229,0.10);
+    --red: #E63946;
+    --display: 'Big Shoulders', 'Arial Black', sans-serif;
+    --body: 'Bricolage Grotesque', system-ui, sans-serif;
+    --mono: 'Geist Mono', 'SF Mono', Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--ink);
+    color: var(--bone);
+    font-family: var(--body);
+    font-size: 15.5px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 28px 80px; }
+
+  .sys {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--bone-dim);
+    padding-bottom: 14px; border-bottom: 1px solid var(--bone-hair); margin-bottom: 42px;
+  }
+  .sys b { color: var(--bone); font-weight: 600; }
+  .sep { color: var(--bone-faint); margin: 0 6px; }
+
+  h1.title {
+    font-family: var(--display); font-weight: 800; font-size: 64px;
+    line-height: 0.92; letter-spacing: -0.01em; margin: 0;
+  }
+  h1.title .dot { color: var(--red); }
+  h1.title .sub {
+    display: block; font-size: 22px; color: var(--red); margin-top: 4px;
+    font-weight: 700; letter-spacing: 0.005em;
+  }
+
+  .intro { color: var(--bone-dim); font-size: 16px; line-height: 1.6; margin: 28px 0 0; max-width: 620px; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--red); margin: 56px 0 14px;
+  }
+  h2.section {
+    font-family: var(--display); font-weight: 800; font-size: 32px;
+    line-height: 1; letter-spacing: -0.005em; margin: 0 0 18px;
+  }
+  h2.section .dot { color: var(--red); }
+
+  p { margin: 0 0 14px; }
+  p.lead { font-size: 16px; color: var(--bone); }
+  strong { color: var(--bone); font-weight: 600; }
+  em { color: var(--bone-dim); font-style: italic; }
+
+  .step-list { counter-reset: step; list-style: none; padding: 0; margin: 18px 0 0; }
+  .step-list li {
+    counter-increment: step;
+    display: grid; grid-template-columns: 44px 1fr; gap: 14px;
+    padding: 16px 0; border-bottom: 1px solid var(--bone-hair);
+  }
+  .step-list li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--mono); color: var(--red); font-size: 12px;
+    letter-spacing: 0.14em; padding-top: 3px;
+  }
+  .step-list li .step-title {
+    font-family: var(--display); font-size: 19px; font-weight: 700;
+    line-height: 1.1; letter-spacing: 0; margin-bottom: 4px;
+  }
+  .step-list li .step-body {
+    font-size: 14.5px; color: var(--bone-dim); line-height: 1.55;
+  }
+  .step-list li .step-body strong { color: var(--bone); }
+
+  .why-cards {
+    display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 20px;
+  }
+  @media (min-width: 600px) {
+    .why-cards { grid-template-columns: 1fr 1fr; }
+  }
+  .why-card {
+    border: 1px solid var(--bone-faint); padding: 18px 18px 20px;
+  }
+  .why-card .why-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+    color: var(--red); text-transform: uppercase;
+  }
+  .why-card .why-title {
+    font-family: var(--display); font-size: 22px; font-weight: 700;
+    line-height: 1.05; margin: 8px 0;
+  }
+  .why-card p { font-size: 13.5px; color: var(--bone-dim); line-height: 1.55; margin: 0; }
+
+  .roadmap-list { list-style: none; padding: 0; margin: 14px 0 0; }
+  .roadmap-list li {
+    padding: 14px 0; border-bottom: 1px solid var(--bone-hair);
+    display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: start;
+  }
+  .roadmap-list li .roadmap-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+    color: var(--red); text-transform: uppercase; padding-top: 2px;
+  }
+  .roadmap-list li .roadmap-body { font-size: 14.5px; color: var(--bone-dim); line-height: 1.55; }
+  .roadmap-list li .roadmap-body strong { color: var(--bone); }
+  @media (max-width: 599px) {
+    .roadmap-list li { grid-template-columns: 1fr; gap: 6px; }
+  }
+
+  .note {
+    margin-top: 36px; padding: 18px 20px;
+    border-left: 2px solid var(--red); background: rgba(230,57,70,0.04);
+  }
+  .note .note-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--red); margin-bottom: 6px;
+  }
+  .note p { margin: 0; font-size: 14.5px; color: var(--bone); line-height: 1.6; }
+
+  .footer {
+    margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--bone-hair);
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--bone-dim);
+  }
+  .footer .lockup {
+    font-family: var(--display); font-weight: 800; color: var(--bone);
+    letter-spacing: 0.02em; font-size: 12px;
+  }
+  .footer .lockup .dot {
+    display: inline-block; width: 6px; height: 6px;
+    background: var(--red); border-radius: 50%; margin-left: 2px; vertical-align: 1px;
+  }
+
+  a { color: var(--red); text-decoration: none; border-bottom: 1px solid rgba(230,57,70,0.3); }
+  a:hover { border-bottom-color: var(--red); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="sys">
+    <div><b>SILENT MAJORITY</b><span class="sep">/</span>INFECTION DROP<span class="sep">/</span>WORKING PROTOTYPE</div>
+    <div>DOC<span class="sep">/</span>SM-PROTO<span class="sep">/</span><b>HOW TO USE</b></div>
+  </div>
+
+  <h1 class="title">
+    THE INFECTION<br>GAME<span class="dot">.</span>
+    <span class="sub">Working Prototype · How to Use</span>
+  </h1>
+
+  <p class="intro">
+    A working slice of the player-side daily loop, built to make the campaign mechanic tangible.
+    Two phones, one cell, and the seven-day decision rhythm the proposal describes — running live, on real devices,
+    in your hand.
+  </p>
+
+  <!-- WHAT THE PROTOTYPE PROVES -->
+  <div class="eyebrow">01 · WHAT THE PROTOTYPE PROVES</div>
+  <h2 class="section">The mechanic, in your hand<span class="dot">.</span></h2>
+
+  <p class="lead">
+    The prototype demonstrates the campaign's central thesis: that peer pressure is most visible
+    when it is shared in real time. Two people in the same room, looking at the same cell, watching
+    each other's choices ripple across both screens. The proposition the proposal argues becomes
+    something you can feel inside a minute.
+  </p>
+
+  <div class="why-cards">
+    <div class="why-card">
+      <div class="why-label">WHAT IT SHOWS</div>
+      <div class="why-title">The daily loop</div>
+      <p>Story drop, pressure decision, cell status update, and the choice carrying forward into the next day. The 60-second rhythm at the heart of the seven-day campaign.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-label">WHAT IT PROVES</div>
+      <div class="why-title">Real-time sync</div>
+      <p>When one player makes a decision, the other player's screen updates within a fraction of a second. The peer mechanic is not a metaphor. It is the product.</p>
+    </div>
+  </div>
+
+  <!-- HOW TO USE IT -->
+  <div class="eyebrow">02 · HOW TO USE IT</div>
+  <h2 class="section">Five steps, two phones<span class="dot">.</span></h2>
+
+  <p>Best experienced with two people side by side, each on their own phone. One phone works too if you would like a solo walkthrough.</p>
+
+  <ol class="step-list">
+    <li>
+      <div>
+        <div class="step-title">Open the link on your phone</div>
+        <div class="step-body">
+          Visit <strong>infection-drop-demo.vercel.app</strong> in any mobile browser. No app to download.
+          No account to create.
+        </div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-title">Choose your initial</div>
+        <div class="step-body">
+          One letter. The cell will see you only by this letter. For two-person demos, pick different letters
+          so you can tell yourselves apart on screen.
+        </div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-title">Enter the cell code</div>
+        <div class="step-body">
+          Both phones type the <strong>same code</strong>. Anything works — <em>NCADA</em>, <em>SCAPE</em>, the date,
+          a word you both agree on. Typing the same code puts you in the same cell.
+        </div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-title">Read the day's story and make your choice</div>
+        <div class="step-body">
+          Each day opens with a short pressure scenario. <strong>HOLD</strong> stays with the cell.
+          <strong>RELEASE</strong> claims a solo advantage. Watch the other phone — when your partner decides,
+          their initial on your screen changes colour, and the infection meter responds.
+        </div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-title">Advance the days</div>
+        <div class="step-body">
+          Tap <strong>Advance Day</strong> at the bottom to move forward. Seven days total. After Day 7,
+          both phones land on <strong>The Reckoning</strong> — a final status reflecting the week's
+          decisions across the cell.
+        </div>
+      </div>
+    </li>
+  </ol>
+
+  <!-- WHAT YOU WILL SEE -->
+  <div class="eyebrow">03 · WHAT YOU WILL SEE</div>
+  <h2 class="section">Five things to notice<span class="dot">.</span></h2>
+
+  <ol class="step-list">
+    <li>
+      <div>
+        <div class="step-title">The story changes the room</div>
+        <div class="step-body">
+          Each day opens with a short scenario — a moment of pressure, a phone buzzing,
+          a friend asking. The decision lands inside a story, not a survey.
+        </div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-title">Decisions appear instantly on both phones</div>
+        <div class="step-body">
+          The other phone updates within a fraction of a second. No refresh, no waiting.
+          This is the same technical foundation the live campaign will use.
+        </div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-title">The infection meter moves with the cell</div>
+        <div class="step-body">
+          More <strong>HOLD</strong> decisions push the meter down. More <strong>RELEASE</strong> decisions push it up.
+          The cell is the unit. Individual choices feed a collective state.
+        </div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-title">Member pills tell the social story</div>
+        <div class="step-body">
+          Filled red means the player held. Grey means they released. Faded means
+          they have not yet decided today. The cell's social state, at a glance.
+        </div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-title">The Reckoning closes the week</div>
+        <div class="step-body">
+          On Day 7, the prototype closes with a reflection on what the cell achieved together.
+          In the full campaign, this is the live broadcast moment at *SCAPE Somerset.
+        </div>
+      </div>
+    </li>
+  </ol>
+
+  <!-- PRODUCTION ROADMAP -->
+  <div class="eyebrow">04 · PRODUCTION ROADMAP</div>
+  <h2 class="section">What the pilot delivers on top of this<span class="dot">.</span></h2>
+
+  <p>The prototype is the player-side daily loop. The full pilot build extends this foundation across the campaign architecture described in the proposal.</p>
+
+  <ul class="roadmap-list">
+    <li>
+      <div class="roadmap-label">PRODUCTION AUTHENTICATION</div>
+      <div class="roadmap-body">Phone-OTP sign-in with PDPA-aligned consent capture, replacing the demo's open-access cell-code model. Verified players, retained consent records, age-gating where required.</div>
+    </li>
+    <li>
+      <div class="roadmap-label">CONTENT MODERATION</div>
+      <div class="roadmap-body">AI moderation layered with human review for all participant-generated content. Tone safety, sensitive-content escalation, and final-decision authority retained under human judgement.</div>
+    </li>
+    <li>
+      <div class="roadmap-label">THE CONFESSIONAL</div>
+      <div class="roadmap-body">The static voice station that runs across all six street days. Anonymous voice capture with modulation, ingestion into the moderation queue, and content flow into the Saturday broadcast.</div>
+    </li>
+    <li>
+      <div class="roadmap-label">THE RECKONING VOTE INFRASTRUCTURE</div>
+      <div class="roadmap-body">The single anchoring vote moment under live audience load. Every phone in the room and every viewer online responding to the same question simultaneously, with instant aggregation and broadcast-ready graphics.</div>
+    </li>
+    <li>
+      <div class="roadmap-label">THE CONVERSATION INTERFACE</div>
+      <div class="roadmap-body">The closing-act stage flow. NCADA's airtime, structured exit pathways, support-resource handoff, and post-event survey capture aligned to the HIGH-informed evaluation framework.</div>
+    </li>
+    <li>
+      <div class="roadmap-label">STREET-LAYER INTEGRATION</div>
+      <div class="roadmap-body">The plaza interactive at *SCAPE Somerset, the booth conversion flow, and the daily loop's integration with on-site recruitment. Sub-200ms input-to-display latency under tested operating conditions.</div>
+    </li>
+    <li>
+      <div class="roadmap-label">REPORTING &amp; EVALUATION</div>
+      <div class="roadmap-body">Pre and post measurement informed by NCADA's HIGH methodology. Operational dashboards for the production team, nightly digests, and final NCADA-ready report at the close of the pilot.</div>
+    </li>
+  </ul>
+
+  <div class="note">
+    <div class="note-label">A NOTE ON THIS PROTOTYPE</div>
+    <p>
+      This is a working prototype, not a production system. Content is illustrative,
+      moderation is intentionally absent, and access is open by cell code rather than verified identity.
+      Treat it as a proof of mechanic. The pilot's full production scope is in the proposal.
+    </p>
+  </div>
+
+  <div class="footer">
+    <div class="lockup">SILENT MAJORITY<span class="dot"></span></div>
+    <div>PILOT PROTOTYPE &middot; 2026</div>
+  </div>
+
+</div>
+</body>
+</html>
