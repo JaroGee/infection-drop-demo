@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<title>Infection Drop · Dev Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:   #1A1612;
+    --bone:  #F2EEE5;
+    --red:   #E63946;
+    --ink60: rgba(26,22,18,0.60);
+    --ink40: rgba(26,22,18,0.40);
+    --ink20: rgba(26,22,18,0.20);
+    --ink10: rgba(26,22,18,0.10);
+    --ink06: rgba(26,22,18,0.06);
+    --red10: rgba(230,57,70,0.08);
+    --red20: rgba(230,57,70,0.14);
+
+    --display: 'Big Shoulders Display', 'Arial Black', sans-serif;
+    --body:    'Bricolage Grotesque', system-ui, sans-serif;
+    --mono:    'Geist Mono', 'SF Mono', Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bone);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page { max-width: 740px; margin: 0 auto; padding: 64px 36px 96px; }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 52px;
+  }
+  .lockup {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .lockup .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--red);
+    border-radius: 50%;
+    margin-left: 1px;
+    vertical-align: 2px;
+  }
+  .doc-id {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink60);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  /* ── TITLE ── */
+  .title-block { margin-bottom: 48px; }
+  .eyebrow-small {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 72px;
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  h1 .dot { color: var(--red); }
+  .title-intro {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink60);
+    max-width: 540px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--ink20); margin: 52px 0; }
+
+  /* ── SECTION ── */
+  .section-header { margin-bottom: 24px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 0.95;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+  h2 .dot { color: var(--red); }
+  h3 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1.1;
+    color: var(--ink);
+    margin: 32px 0 10px;
+  }
+
+  /* ── BODY ── */
+  p { margin-bottom: 14px; font-size: 15px; line-height: 1.65; }
+  p.lead { font-size: 17px; color: var(--ink); line-height: 1.6; margin-bottom: 18px; }
+  p:last-child { margin-bottom: 0; }
+  strong { font-weight: 600; }
+  ul, ol { padding-left: 0; list-style: none; margin-bottom: 14px; }
+  li { padding: 4px 0 4px 16px; position: relative; font-size: 14px; color: var(--ink60); line-height: 1.6; }
+  li::before { content: '—'; position: absolute; left: 0; color: var(--red); font-family: var(--mono); font-size: 11px; top: 6px; }
+  li strong { color: var(--ink); }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--ink);
+    color: var(--bone);
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.65;
+    padding: 20px 22px;
+    margin: 18px 0;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-block .comment { color: rgba(242,238,229,0.35); }
+  .code-block .key { color: var(--red); }
+  code {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    background: var(--ink10);
+    padding: 1px 5px;
+    color: var(--ink);
+  }
+
+  /* ── TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+  .data-table th {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--ink20);
+  }
+  .data-table td {
+    font-size: 13px;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--ink10);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .data-table td:first-child { font-family: var(--mono); font-size: 11.5px; color: var(--ink); }
+  .data-table td:nth-child(2) { color: var(--red); font-family: var(--mono); font-size: 11px; }
+  .data-table td:nth-child(3) { color: var(--ink60); }
+  .data-table tr:last-child td { border-bottom: none; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-left: 3px solid var(--red);
+    background: var(--red10);
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+  .callout-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  .callout p { font-size: 14px; color: var(--ink); line-height: 1.65; margin: 0; }
+
+  /* ── INLINE TAG ── */
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border: 1px solid var(--ink20);
+    color: var(--ink60);
+    margin-left: 6px;
+    vertical-align: 2px;
+  }
+  .tag.red { border-color: var(--red20); color: var(--red); }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 72px;
+    padding-top: 20px;
+    border-top: 2px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .footer .lockup { font-size: 11px; }
+  .footer-right {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink60);
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { font-size: 13px; }
+    .page { padding: 40px 32px 60px; }
+    h1 { font-size: 56px; }
+    h2 { font-size: 28px; }
+    .code-block { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="lockup">SILENT MAJORITY<span class="dot"></span></div>
+    <div class="doc-id">
+      INFECTION DROP<br>
+      DEV REFERENCE<br>
+      FOR MANZO
+    </div>
+  </div>
+
+  <!-- TITLE -->
+  <div class="title-block">
+    <div class="eyebrow-small">Technical Handoff</div>
+    <h1>CODER<br>BRIEF<span class="dot">.</span></h1>
+    <p class="title-intro">
+      Architecture, schema, realtime model, and production gaps.
+      Everything you need to understand the prototype and spec the production build.
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 01 STACK -->
+  <div class="section-header">
+    <div class="eyebrow">01 — Stack</div>
+    <h2>What it's built on<span class="dot">.</span></h2>
+  </div>
+
+  <p class="lead">Zero build step. Vanilla JS module in a single HTML file, deployed as a static asset on Vercel.</p>
+
+  <ul>
+    <li><strong>Frontend:</strong> Single <code>index.html</code>. No framework, no bundler, no npm. Supabase client pulled via <code>esm.sh</code> CDN import.</li>
+    <li><strong>Database + Realtime:</strong> Supabase (Postgres). Three tables. Realtime via <code>postgres_changes</code> subscription over a persistent WebSocket.</li>
+    <li><strong>Hosting:</strong> Vercel. Auto-deploys on push to <code>main</code>. Static file serve — no serverless functions in use.</li>
+    <li><strong>Repo:</strong> <code>github.com/JaroGee/infection-drop-demo</code></li>
+    <li><strong>Live URL:</strong> <code>infection-drop-demo.vercel.app</code></li>
+  </ul>
+
+  <div class="code-block"><span class="comment">// Supabase client — hardcoded in index.html</span>
+<span class="key">const</span> SUPABASE_URL = 'https://aeaylyimninfdkhkusoc.supabase.co';
+<span class="key">const</span> SUPABASE_KEY = 'sb_publishable_t-KRtim6z-JJLopMFrBs1A_5soEwoey';
+<span class="key">const</span> supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+<span class="comment">// Module import — no bundler needed</span>
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.4';</div>
+
+  <div class="callout">
+    <div class="callout-label">No RLS</div>
+    <p>Row-level security is off on all three tables. Any client with the publishable key can read and write anything. Fine for a closed demo; needs to be locked down before any public-facing build.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 02 SCHEMA -->
+  <div class="section-header">
+    <div class="eyebrow">02 — Schema</div>
+    <h2>Three tables<span class="dot">.</span></h2>
+  </div>
+
+  <h3>cells</h3>
+  <table class="data-table">
+    <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+    <tr><td>id</td><td>uuid PK</td><td>Auto-generated. Used as the FK reference for players and decisions.</td></tr>
+    <tr><td>code</td><td>text</td><td>The user-visible cell code (e.g. <code>DEMO</code>). Unique. Lookup key on join.</td></tr>
+    <tr><td>name</td><td>text</td><td>Human label, set to <code>{code} Cell</code> on creation. Not currently displayed.</td></tr>
+    <tr><td>current_day</td><td>int4</td><td>Starts at 1. Incremented by any player clicking Advance Day. Realtime UPDATE on this column triggers day transitions across all connected clients. When &gt; 7, all clients route to the Reckoning screen.</td></tr>
+    <tr><td>created_at</td><td>timestamptz</td><td>Auto. Unused in app logic.</td></tr>
+  </table>
+
+  <h3>players</h3>
+  <table class="data-table">
+    <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+    <tr><td>id</td><td>uuid PK</td><td>Stored in <code>sessionStorage</code> as <code>idDemo.playerId</code> to resume sessions after refresh.</td></tr>
+    <tr><td>cell_id</td><td>uuid FK</td><td>References <code>cells.id</code>. Subscription filter is <code>cell_id=eq.{cellId}</code>.</td></tr>
+    <tr><td>display_name</td><td>text</td><td>Same as initial in demo. In production, this would be the verified name/handle.</td></tr>
+    <tr><td>initial</td><td>text</td><td>Single char. The avatar shown in member pills. Uppercased on input.</td></tr>
+    <tr><td>is_active</td><td>bool</td><td>Defaults true. Players query filters on <code>is_active=true</code>. Soft-delete path, not currently used.</td></tr>
+    <tr><td>joined_at</td><td>timestamptz</td><td>Auto. Used to order member pills (oldest first).</td></tr>
+  </table>
+
+  <h3>decisions</h3>
+  <table class="data-table">
+    <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+    <tr><td>id</td><td>uuid PK</td><td>Auto.</td></tr>
+    <tr><td>player_id</td><td>uuid FK</td><td>References <code>players.id</code>.</td></tr>
+    <tr><td>cell_id</td><td>uuid FK</td><td>Denormalised for simpler queries and subscription filtering.</td></tr>
+    <tr><td>day</td><td>int4</td><td>1–7. Combined with <code>player_id</code> forms a logical unique key (not enforced as constraint in demo).</td></tr>
+    <tr><td>choice</td><td>text</td><td><code>'HOLD'</code> or <code>'RELEASE'</code>. Enum not enforced at DB level in demo.</td></tr>
+    <tr><td>created_at</td><td>timestamptz</td><td>Auto.</td></tr>
+  </table>
+
+  <hr class="divider">
+
+  <!-- 03 REALTIME -->
+  <div class="section-header">
+    <div class="eyebrow">03 — Realtime</div>
+    <h2>How sync works<span class="dot">.</span></h2>
+  </div>
+
+  <p class="lead">One Supabase channel per cell. Three <code>postgres_changes</code> listeners. Any DB mutation triggers a full reload of client-side state followed by a full re-render.</p>
+
+  <div class="code-block">state.channel = supabase
+  .channel('cell:' + state.cellId)
+  .on('postgres_changes',
+    { event: '*', schema: 'public', table: 'players',
+      filter: 'cell_id=eq.' + state.cellId },
+    <span class="key">async</span> () => { await loadState(); renderAll(); }
+  )
+  .on('postgres_changes',
+    { event: '*', schema: 'public', table: 'decisions',
+      filter: 'cell_id=eq.' + state.cellId },
+    <span class="key">async</span> () => { await loadState(); renderAll(); }
+  )
+  .on('postgres_changes',
+    { event: 'UPDATE', schema: 'public', table: 'cells',
+      filter: 'id=eq.' + state.cellId },
+    <span class="key">async</span> (payload) => {
+      state.currentDay = payload.new.current_day;
+      await loadState(); renderAll();
+      if (state.currentDay > 7) { show('screen-reckoning'); renderReckoning(); }
+    }
+  )
+  .subscribe();</div>
+
+  <ul>
+    <li><strong>Players listener:</strong> fires on INSERT/UPDATE/DELETE. Used when someone new joins the cell mid-demo.</li>
+    <li><strong>Decisions listener:</strong> fires on INSERT. The main sync path — when one client taps HOLD/RELEASE, all others update within ~100–300ms on a warm connection.</li>
+    <li><strong>Cells listener:</strong> fires on UPDATE only. Day advancement and Reckoning routing live here. Because <code>current_day</code> comes directly from <code>payload.new</code>, this avoids a round-trip for the field that matters most.</li>
+    <li><strong>No optimistic updates.</strong> UI only changes after the DB write succeeds and the realtime event comes back. Keeps state consistent at the cost of a small perceived latency on the deciding player's own phone.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-label">Realtime on Supabase free tier</div>
+    <p>Free plan supports 200 concurrent realtime connections and 2M messages/month. More than enough for a demo. For a 200-person live event, verify concurrent connection limits against the org's current plan before the build.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 04 STATE MACHINE -->
+  <div class="section-header">
+    <div class="eyebrow">04 — Client state</div>
+    <h2>The state object<br>and screen flow<span class="dot">.</span></h2>
+  </div>
+
+  <div class="code-block"><span class="comment">// Single mutable object. No framework state management.</span>
+let state = {
+  playerId:   null,   <span class="comment">// uuid — set on join, persisted to sessionStorage</span>
+  cellId:     null,   <span class="comment">// uuid — FK used in all queries and subscriptions</span>
+  cellCode:   null,   <span class="comment">// string — shown in presence indicator</span>
+  initial:    null,   <span class="comment">// string — the player's single-char avatar</span>
+  currentDay: 1,      <span class="comment">// int 1–8 (>7 = Reckoning)</span>
+  players:    [],     <span class="comment">// [{id, initial, display_name, is_active}]</span>
+  decisions:  [],     <span class="comment">// [{player_id, cell_id, day, choice}]</span>
+  channel:    null,   <span class="comment">// RealtimeChannel — stored to unsubscribe on reset</span>
+};</div>
+
+  <p>Three screens, toggled by the <code>show()</code> helper which adds/removes <code>.hidden</code>:</p>
+
+  <ul>
+    <li><strong><code>screen-onboard</code></strong> — initial + cell code input. On submit: find-or-create cell row, insert player row, write to <code>sessionStorage</code>, <code>loadState()</code>, <code>subscribeRealtime()</code>.</li>
+    <li><strong><code>screen-game</code></strong> — the daily loop. Renders story, infection meter, member pills, HOLD/RELEASE buttons, sub-actions, progress ticks. Driven entirely by <code>renderAll()</code> reading from <code>state</code>.</li>
+    <li><strong><code>screen-reckoning</code></strong> — final screen. Shown when <code>currentDay > 7</code>, either from realtime UPDATE callback or on resume from <code>sessionStorage</code>. Contains the REPLAY DEMO button.</li>
+  </ul>
+
+  <h3>Session resume</h3>
+  <p>On page load, the script checks <code>sessionStorage.getItem('idDemo')</code>. If present, it re-hydrates <code>state</code>, calls <code>loadState()</code> to pull fresh DB data, and re-subscribes. This means a phone can refresh mid-game without losing its place. The session survives tab closes but not private browsing or manual clear.</p>
+
+  <hr class="divider">
+
+  <!-- 05 RESET -->
+  <div class="section-header">
+    <div class="eyebrow">05 — Reset</div>
+    <h2>How REPLAY DEMO<br>works<span class="dot">.</span></h2>
+  </div>
+
+  <p>The reset is a server-side wipe, not just a client-side state clear. Three Supabase operations fire in parallel before the UI resets to onboarding.</p>
+
+  <div class="code-block">document.getElementById('btn-restart').addEventListener('click', <span class="key">async</span> () => {
+  const cellId = state.cellId;              <span class="comment">// capture before wipe</span>
+  sessionStorage.removeItem('idDemo');
+  if (state.channel) state.channel.unsubscribe();
+  state = { playerId: null, cellId: null, cellCode: null, initial: null,
+            currentDay: 1, players: [], decisions: [], channel: null };
+
+  if (cellId) {
+    await Promise.all([
+      supabase.from('decisions').delete().eq('cell_id', cellId),
+      supabase.from('players').delete().eq('cell_id', cellId),
+      supabase.from('cells').update({ current_day: 1 }).eq('id', cellId),
+    ]);
+  }
+  <span class="comment">// then reset UI to onboard screen</span>
+});</div>
+
+  <ul>
+    <li>Captures <code>cellId</code> before wiping <code>state</code> — the Promise.all needs it.</li>
+    <li>Unsubscribes the realtime channel before state wipe, avoiding orphaned listeners.</li>
+    <li>Parallel deletes: decisions and players are independent. Cell update runs alongside them. <code>await Promise.all</code> blocks UI reset until all three complete.</li>
+    <li>After reset, the same cell <em>code</em> (e.g. <code>DEMO</code>) can be re-used — the cell row still exists with <code>current_day = 1</code>. New players will be inserted fresh on the next join.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-label">Race condition note</div>
+    <p>If two clients are connected and one hits REPLAY DEMO while the other is mid-decision, the deletes will wipe the second client's data. The second client will receive realtime events for the deletes and re-render an empty state — it won't crash, but the experience is abrupt. Not worth fixing for a controlled demo; worth addressing in production with a lobby/host model.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 06 INFECTION ALGORITHM -->
+  <div class="section-header">
+    <div class="eyebrow">06 — Infection meter</div>
+    <h2>How the percentage<br>is calculated<span class="dot">.</span></h2>
+  </div>
+
+  <p>Purely client-side. Derived from <code>state.decisions</code> on every render. Not stored in the DB.</p>
+
+  <div class="code-block">function calculateInfection() {
+  const totalReleases = state.decisions.filter(d => d.choice === 'RELEASE').length;
+  const totalHolds    = state.decisions.filter(d => d.choice === 'HOLD').length;
+  const cellSize      = Math.max(state.players.length, 1);
+  const dayMultiplier = state.currentDay * 2;     <span class="comment">// baseline rises each day</span>
+  const base          = 30 + dayMultiplier;        <span class="comment">// Day 1 = 32%, Day 7 = 44%</span>
+  const releaseEffect = (totalReleases / cellSize) * 12;
+  const holdEffect    = (totalHolds / cellSize) * 6;
+  let pct = base + releaseEffect - holdEffect;
+  return Math.max(8, Math.min(96, Math.round(pct))); <span class="comment">// clamp 8–96</span>
+}</div>
+
+  <ul>
+    <li>Baseline grows by 2pp per day regardless of decisions — conveys that pressure accumulates over time.</li>
+    <li>Each RELEASE adds <code>12 / cellSize</code> — effect is diluted in larger cells.</li>
+    <li>Each HOLD subtracts <code>6 / cellSize</code> — holds soften but don't cancel releases at equal count.</li>
+    <li>Clamped to 8–96 so it never reads as a clean zero or absolute maximum, which would feel wrong.</li>
+    <li>State labels: <code>&lt; 40%</code> = HOLDING, <code>&lt; 65%</code> = PRESSURED, <code>&lt; 85%</code> = BREACHING, else CRITICAL.</li>
+  </ul>
+
+  <hr class="divider">
+
+  <!-- 07 KNOWN SHORTCUTS -->
+  <div class="section-header">
+    <div class="eyebrow">07 — Demo shortcuts</div>
+    <h2>What's hardcoded<br>or missing<span class="dot">.</span></h2>
+  </div>
+
+  <ul>
+    <li><strong>Stories are hardcoded:</strong> <code>const stories = { 1: "...", ..., 7: "..." }</code> in the script. No CMS, no DB fetch. Change the strings directly to update content.</li>
+    <li><strong>Any player can advance the day:</strong> <code>btn-advance</code> is visible to all. In production this should be host-only or triggered by a facilitator dashboard.</li>
+    <li><strong>Any player can reset:</strong> REPLAY DEMO is visible to everyone on the Reckoning screen. Same host-only caveat.</li>
+    <li><strong>Cell cap not enforced:</strong> UI shows <code>1/6</code> max but there's no DB constraint. Six or more players can join the same cell code.</li>
+    <li><strong>No duplicate decision guard at DB level:</strong> A player can technically INSERT two decisions for the same day if they race. The client checks <code>getMyDecisionToday()</code> and returns early, but there's no unique constraint on <code>(player_id, day)</code>.</li>
+    <li><strong>RESCUE and INVITE are placeholder UI:</strong> RESCUE shows a toast. INVITE uses <code>navigator.share</code> or clipboard. Neither writes to the DB.</li>
+    <li><strong>Cell rank is hardcoded:</strong> <code>state.players.length >= 4 ? '12' : '—'</code>. Not a real leaderboard.</li>
+    <li><strong>URL param autofill:</strong> <code>?cell=CODE</code> pre-fills the cell code input. Useful for invite links. Already in production — <code>btn-invite</code> generates this URL.</li>
+    <li><strong>No auth:</strong> Players are anonymous. <code>playerId</code> is a raw UUID stored in <code>sessionStorage</code>. No Supabase Auth in use.</li>
+  </ul>
+
+  <hr class="divider">
+
+  <!-- 08 PRODUCTION TODO -->
+  <div class="section-header">
+    <div class="eyebrow">08 — Production build</div>
+    <h2>What needs to be<br>built from scratch<span class="dot">.</span></h2>
+  </div>
+
+  <p>The demo covers the player-side daily loop only. Production is a different scope. Technical breakdown of the open items:</p>
+
+  <ul>
+    <li><strong>Auth + consent:</strong> Phone number OTP via Supabase Auth or Twilio Verify. Consent record tied to <code>auth.users.id</code>. Age-gate logic (date-of-birth capture, under-16 parental consent flow).</li>
+    <li><strong>Host / facilitator role:</strong> Separate auth claim for event staff. Controls day advancement, cell creation, reset, and broadcast trigger. Prevents participants from manipulating game state.</li>
+    <li><strong>RLS on all tables:</strong> Players can only read/write their own cell's data. Decisions insert-only once per <code>(player_id, day)</code> — add unique constraint. Cells update restricted to host role.</li>
+    <li><strong>Content pipeline:</strong> Stories, scenarios, and copy pulled from a DB table or CMS. Allows last-minute editorial changes without a redeploy.</li>
+    <li><strong>The Confessional:</strong> Voice recording capture (MediaRecorder API or native on PWA), upload to Supabase Storage, pitch-shift / modulation pass (possible client-side via Web Audio API), moderation queue before broadcast inclusion.</li>
+    <li><strong>Reckoning live vote:</strong> Simultaneous poll with instant aggregation. Supabase Realtime already handles the sync pattern — the main lift is the broadcast UI and the aggregation query under load.</li>
+    <li><strong>*SCAPE plaza integration:</strong> Sub-200ms input-to-display target means the realtime subscription must stay on a warm connection. Consider a dedicated Supabase channel for the broadcast display vs. individual player channels.</li>
+    <li><strong>AI moderation:</strong> Pipe user-submitted content through a moderation API before surfacing publicly. Human escalation queue for flagged items.</li>
+    <li><strong>Evaluation / reporting:</strong> Pre/post survey flows, decision export, nightly digest emails, final NCADA-format report. Likely a separate internal dashboard, not part of the participant app.</li>
+    <li><strong>PWA shell:</strong> Add manifest + service worker for homescreen install and offline resilience. Not strictly required but expected UX for a week-long daily engagement.</li>
+    <li><strong>Push notifications:</strong> Daily prompt delivery. Web Push API or a native wrapper. Requires Notification permission — factor into the onboarding consent flow.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-label">Stack recommendation for production</div>
+    <p>The prototype's vanilla-JS-on-Vercel approach works fine for a 6-player demo. For a 200-player live event with a facilitator dashboard, push notifications, voice recording, and a broadcast display, the build warrants a proper framework (Next.js fits the Vercel stack) and Supabase row-level security enabled from the start. Don't grow the prototype — build the production version clean.</p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="lockup">SILENT MAJORITY<span class="dot"></span></div>
+    <div class="footer-right">Dev Reference · 2026</div>
+  </div>
+
+</div>
+</body>
+</html>
